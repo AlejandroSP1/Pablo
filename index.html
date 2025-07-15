@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reservación de Laboratorios</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+  <!-- Encabezado pastel chido -->
+  <header class="main-header">
+    <h1>Sistema de Reservas 📝</h1>
+  </header>
+
+  <main class="container">
+    <!-- Login -->
+    <div id="login-section">
+      <input type="email" id="email" placeholder="Correo" required>
+      <input type="password" id="password" placeholder="Contraseña" required>
+      <button onclick="login()">Iniciar sesión</button>
+      <button onclick="register()">Registrarse</button>
+    </div>
+
+    <!-- Reservas -->
+    <div id="reserva-section" style="display: none;">
+      <p id="user-info"></p>
+      <input type="date" id="fecha" min="2025-07-09" required>
+      <input type="time" id="hora" min="08:00" max="18:00" required>
+      <input type="text" id="laboratorio" placeholder="Laboratorio (Ej. Lab 3)" required>
+      <button onclick="reservar()">Reservar</button>
+
+      <h3>Mis Reservas:</h3>
+      <ul id="lista-reservas"></ul>
+      <button onclick="logout()">Cerrar sesión</button>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
