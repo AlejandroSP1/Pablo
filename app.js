@@ -16,26 +16,22 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// Validar email
 function esEmailValido(email) {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return regex.test(email);
 }
 
-// Limpiar campos de login/registro
 function limpiarCamposAuth() {
   document.getElementById("email").value = "";
   document.getElementById("password").value = "";
 }
 
-// Limpiar campos de reserva
 function limpiarCamposReserva() {
   document.getElementById("fecha").value = "";
   document.getElementById("hora").value = "";
   document.getElementById("laboratorio").value = "";
 }
 
-// REGISTRO de usuario
 function register() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
@@ -63,7 +59,6 @@ function register() {
     .catch(e => alert("Error: " + e.message));
 }
 
-// INICIO DE SESIÓN
 function login() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
@@ -86,12 +81,10 @@ function login() {
     .catch(e => alert("Error: " + e.message));
 }
 
-// CERRAR SESIÓN
 function logout() {
   auth.signOut().then(() => alert("Sesión cerrada"));
 }
 
-// DETECTAR SESIÓN ACTIVA
 auth.onAuthStateChanged(user => {
   if (user) {
     document.getElementById("login-section").style.display = "none";
@@ -104,11 +97,10 @@ auth.onAuthStateChanged(user => {
   }
 });
 
-// HACER RESERVA con validación para evitar duplicados, fechas/hora anteriores y reservas en menos de 1 hora en el mismo laboratorio
 function reservar() {
   const fecha = document.getElementById("fecha").value.trim();
   const hora = document.getElementById("hora").value.trim();
-  const lab = document.getElementById("laboratorio").value.trim().toLowerCase();
+  const lab = document.getElementById("laboratorio").value.trim();
   const user = auth.currentUser;
 
   if (!fecha || !hora || !lab) {
@@ -116,7 +108,6 @@ function reservar() {
     return;
   }
 
-  // Construir objeto Date con fecha y hora completa
   const fechaHoraReserva = new Date(`${fecha}T${hora}:00`);
   const ahora = new Date();
 
@@ -135,15 +126,10 @@ function reservar() {
 
         snapshot.forEach(doc => {
           const data = doc.data();
-
-          // Construir objeto Date de la reserva existente
           const fechaHoraExistente = new Date(`${data.fecha}T${data.hora}:00`);
-
-          // Calcular diferencia en milisegundos
           const diffMs = Math.abs(fechaHoraReserva - fechaHoraExistente);
           const diffMinutos = diffMs / (1000 * 60);
 
-          // Si la diferencia es menor a 60 minutos (1 hora), hay conflicto
           if (diffMinutos < 60) {
             conflicto = true;
           }
@@ -154,14 +140,10 @@ function reservar() {
           return;
         }
 
-        // Revisar si hay reserva exacta para evitar duplicados
         let existe = false;
         snapshot.forEach(doc => {
           const data = doc.data();
-          if (
-            data.hora === hora &&
-            data.laboratorio.toLowerCase() === lab
-          ) {
+          if (data.hora === hora && data.laboratorio === lab) {
             existe = true;
           }
         });
@@ -171,7 +153,6 @@ function reservar() {
           return;
         }
 
-        // Si no hay conflicto, crear reserva
         return db.collection("reservas").add({
           uid: user.uid,
           email: user.email,
@@ -189,7 +170,6 @@ function reservar() {
   }
 }
 
-// MOSTRAR RESERVAS
 function mostrarReservas(uid) {
   db.collection("reservas")
     .where("uid", "==", uid)

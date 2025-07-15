@@ -29,7 +29,17 @@
       <p id="user-info"></p>
       <input type="date" id="fecha" min="2025-07-09" required>
       <input type="time" id="hora" min="08:00" max="18:00" required>
-      <input type="text" id="laboratorio" placeholder="Laboratorio (Ej. Lab 3)" required>
+
+      <!-- Menú desplegable de laboratorios -->
+      <select id="laboratorio" required>
+        <option value="">Selecciona un laboratorio</option>
+        <option value="lab 1">Lab 1</option>
+        <option value="lab 2">Lab 2</option>
+        <option value="lab 3">Lab 3</option>
+        <option value="lab 4">Lab 4</option>
+        <option value="lab 5">Lab 5</option>
+      </select>
+
       <button onclick="reservar()">Reservar</button>
 
       <h3>Mis Reservas:</h3>
